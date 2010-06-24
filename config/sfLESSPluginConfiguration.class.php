@@ -42,5 +42,20 @@ class sfLESSPluginConfiguration extends sfPluginConfiguration
         ));
       }
     }
+  
+    $this->dispatcher->connect('routing.load_configuration', array($this, 'listenToRoutingLoadConfigurationEvent'));
+
+  }
+
+  /**
+   * Listens to the routing.load_configuration event.
+   *
+   * @param sfEvent An sfEvent instance
+   */
+  public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
+  {
+    $r = $event->getSubject();
+    $r->prependRoute('less_css_compile', new sfRoute('/lesscss/compile', array('module' => 'lessCss', 'action' => 'compile')));
+
   }
 }

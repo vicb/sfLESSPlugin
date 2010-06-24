@@ -61,6 +61,8 @@ class sfWebDebugPanelLESS extends sfWebDebugPanel
     }
     $panel .= '</table>';
 
+    $panel .= '<br/><a href="/lesscss/compile">Compile</href><br/>';
+
     return $panel;
   }
 

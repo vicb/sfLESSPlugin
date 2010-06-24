@@ -277,7 +277,7 @@ class sfLESS
         if ($useJs)
         {
           $response->addStylesheet('/less/' . $file, '', array_merge($options, array('rel' => 'stylesheet/less')));
-        $hasLess = true;
+          $hasLess = true;
         }
         else
         {
@@ -304,15 +304,20 @@ class sfLESS
     // Start compilation timer for debug info
     $timer = sfTimerManager::getTimer('Less compilation');
 
+    self::doFindAndCompile();
+
+    // Stop timer
+    $timer->addTime();
+  }
+
+  static public function doFindAndCompile()
+  {
     // Create new helper object & compile LESS stylesheets with it
     $lessHelper = new self;
     foreach (self::findLessFiles() as $lessFile)
     {
       $lessHelper->compile($lessFile);
     }
-
-    // Stop timer
-    $timer->addTime();
   }
 
   /**
