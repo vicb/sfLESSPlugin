@@ -26,13 +26,50 @@ class BaselessCssActions extends sfActions
    */
   public function executeCompile(sfWebRequest $request)
   {
-    $less = new sfLESS(false);
-    $less->doFindAndCompile();
-    $this->files = sfLESS::getCompileResults();
-    $this->errors = sfLESS::getCompileErrors();
-   
-    $this->getResponse()->setContentType('text/plain');
+    $response = $this->getResponse();
+
+    $this->files = array();
+    foreach(sfLESS::findLessFiles() as $file)
+    {
+      $this->files[] = str_replace(sfConfig::get('sf_web_dir'), '', $file);
+    }
+
+    $form = new BaseForm();
+    if ($form->isCSRFProtected())
+    {
+      $this->csrfName = $form->getCSRFFieldName();
+      $this->csrfToken = $form->getCSRFToken();
+    }
+    else
+    {
+      $this->csrfName = "nocsrf";
+      $this->csrfToken = "1";
+    }
+
+    sfConfig::set('sf_web_debug', false);
     $this->setLayout(false);
+  }
+
+  /**
+   * Executes SaveCss action
+   *
+   * @param sfRequest $request A request object
+   */
+  public function executeSaveCss(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isXmlHttpRequest());
+    $request->checkCSRFProtection();
+    $this->getResponse()->setStatusCode('404');
+    if ($request->hasParameter('file') && $request->hasParameter('content'))
+    {
+      // todo: check real path, permissions
+      $file = preg_replace('/^\/less/', '/css', $request->getParameter('file'));
+      $file = preg_replace('/\.less$/', '.css-ajax', $file);
+      $file = sfConfig::get('sf_web_dir') . $file;
+      file_put_contents($file, $request->getParameter('content'));
+      $this->getResponse()->setStatusCode('200');
+    }
+    return $this->renderText($file);
   }
 
 }
