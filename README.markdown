@@ -130,7 +130,18 @@ sfLESSPlugin server side compiler rechecks `web/less/*.less` at every routes ini
 	  sf_less_plugin:
 	    compile:  false
 
-sfLESSPlugin server side compiler checks the dates of LESS & CSS files, and will compile again only if LESS file have been changed since last parsing. To prevent this check & to enforce everytime compiling, add this in your apps/APP/config/app.yml:
+sfLESSPlugin server side compiler checks the dates of LESS & CSS files, and will by default compile again only if LESS file have been changed since last parsing .
+
+When you use `@import` statements in your LESS files, you should also turn on dependencies checking in one of you app.yml:
+
+    dev:
+      sf_less_plugin:
+        check_dates:        true
+        check_dependencies: true
+
+**warning:** Checking for the dependencies will affect performances and should not be turned on in production
+
+The safest (but probably slowest) option is to enforce everytime compiling:
 
 	dev:
 	  sf_less_plugin:
@@ -175,3 +186,12 @@ If you want to compile specific file, not all, just use argument & file name wit
 * vicb (contributor): [http://github.com/vicb](http://github.com/vicb)
 
 less.js is maintained by Alexis Sellier [http://github.com/cloudhead](http://github.com/cloudhead)
+
+## History ##
+
+### v1.1.0 released on 2010-07-01 ###
+
+* added an helper to include less stylesheets in layouts / templates
+* [client side] less javascript updated to version 1.0.30
+* [server side] added a visual feedback in the debug bar when some files have been compiled
+* [server side] added an optional dependency check 
