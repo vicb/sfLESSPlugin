@@ -3,11 +3,11 @@
   <head>
     <title>LESS files compilation</title>
     <?php foreach ($files as $index => $f) : ?>
-      <?php echo sprintf("<link rel='stylesheet/less'  href='%s' type='text/css' title='%d'/>\n", $f, $index); ?>
+      <?php echo stylesheet_tag($f, array('rel' => 'stylesheet/less', 'type' => 'text/css', 'title' => $index)); ?>
     <?php endforeach; ?>
     <?php //todo: constant ?>
-    <?php echo sprintf("<script type='text/javascript' src='%s' ></script>\n", '/sfLESSPlugin/js/jquery-1.4.2.min.js'); ?>
-    <?php echo sprintf("<script type='text/javascript' src='%s' ></script>\n", '/sfLESSPlugin/js/less-1.0.30.js'); ?>
+    <script type='text/javascript' src='/sfLESSPlugin/js/jquery-1.4.2.min.js'></script>
+    <script type='text/javascript' src='/sfLESSPlugin/js/less-1.0.33.js'></script>
   </head>
   <body>
     <h1>Compiling Less files</h1>
