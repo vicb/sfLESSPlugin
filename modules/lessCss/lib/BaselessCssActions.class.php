@@ -19,6 +19,11 @@
 
 class BaselessCssActions extends sfActions
 {
+  public function preExecute()
+  {
+    $this->less = new sfLESS();
+  }
+
   /**
    * Executes Compile action
    *
@@ -29,7 +34,7 @@ class BaselessCssActions extends sfActions
     $response = $this->getResponse();
 
     $this->files = array();
-    foreach(sfLESS::findLessFiles() as $file)
+    foreach($this->less->findLessFiles() as $file)
     {
       $this->files[] = str_replace(sfConfig::get('sf_web_dir'), '', $file);
     }
@@ -62,14 +67,36 @@ class BaselessCssActions extends sfActions
     $this->getResponse()->setStatusCode('404');
     if ($request->hasParameter('file') && $request->hasParameter('content'))
     {
-      // todo: check real path, permissions
-      $file = preg_replace('/^\/less/', '/css', $request->getParameter('file'));
-      $file = preg_replace('/\.less$/', '.css-ajax', $file);
-      $file = sfConfig::get('sf_web_dir') . $file;
-      file_put_contents($file, $request->getParameter('content'));
-      $this->getResponse()->setStatusCode('200');
+      $less = sfConfig::get('sf_web_dir') . $request->getParameter('file');
+      if (file_exists($less))
+      {
+        $css = $this->less->getCssPathOfLess($less);
+        // Checks if path exists & create if not
+        if (!is_dir(dirname($css)))
+        {
+          mkdir(dirname($css), 0777, true);
+          // PHP workaround to fix nested folders
+          chmod(dirname($css), 0777);
+        }
+        // Do not try to change the permission of an existing file which we might not own
+        $setPermission = !is_file($css);
+        $buffer = $request->getParameter('content');
+        // Compress CSS if we use compression
+        if (sfLESS::getConfig()->isUseCompression())
+        {
+          $buffer = sfLESSUtils::getCompressedCss($buffer);
+        }
+        // Add compiler header to CSS & writes it to file
+        file_put_contents($css, sfLESSUtils::getCssHeader() . "\n\n" . $buffer);
+        if ($setPermission)
+        {
+          // Set permissions for fresh files only
+          chmod($css, 0666);
+        }
+        $this->getResponse()->setStatusCode('200');
+      }
     }
-    return $this->renderText($file);
+    return $this->renderText($css);
   }
 
 }

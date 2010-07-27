@@ -86,4 +86,23 @@ class sfLESSListeners
     // Stop timer
     $timer->addTime();
   }
+
+  /**
+   * Listens to the routing.load_configuration event.
+   *
+   * @param sfEvent An sfEvent instance
+   */
+  static public function listenToRoutingLoadConfigurationEvent(sfEvent $event)
+  {
+    $r = $event->getSubject();
+    $r->prependRoute('less_css_compile', new sfRoute(
+      '/lesscss/compile',
+      array('module' => 'lessCss', 'action' => 'compile'))
+    );
+    $r->prependRoute('less_css_save_css', new sfRequestRoute(
+      '/lesscss/save',
+      array('module' => 'lessCss', 'action' => 'saveCss'),
+      array('sf_method' => array(sfRequest::POST))
+    ));
+  }
 }
