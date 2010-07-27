@@ -9,7 +9,7 @@
  */
 
 /**
- * TODO
+ * Base actions for the lessCss module
  *
  * @package    sfLESSPlugin
  * @subpackage actions
@@ -25,7 +25,7 @@ class BaselessCssActions extends sfActions
   }
 
   /**
-   * Executes Compile action
+   * Generate the page that trigger less files compilation
    *
    * @param sfRequest $request A request object
    */
@@ -56,7 +56,7 @@ class BaselessCssActions extends sfActions
   }
 
   /**
-   * Executes SaveCss action
+   * Save the css content to a file
    *
    * @param sfRequest $request A request object
    */

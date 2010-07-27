@@ -2,19 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>LESS files compilation</title>
-    <?php foreach ($files as $index => $f) : ?>
-      <?php echo stylesheet_tag($f, array('rel' => 'stylesheet/less', 'type' => 'text/css', 'title' => $index, 'media' => 'print')); ?>
-    <?php endforeach; ?>
-    <?php //todo: constant ?>
-    <script type='text/javascript' src='/sfLESSPlugin/js/jquery-1.4.2.min.js'></script>
-    <script type='text/javascript' src='<?php echo sfLESS::getConfig()->getLessJsPath(); ?>'></script>
+    <?php 
+      foreach ($files as $index => $f)
+      {
+        echo stylesheet_tag($f, array('rel' => 'stylesheet/less', 'type' => 'text/css', 'title' => $index, 'media' => 'print'));
+      }
+      echo javascript_include_tag('/sfLESSPlugin/js/jquery-1.4.2.min.js');
+      echo javascript_include_tag(sfLESS::getConfig()->getLessJsPath());
+    ?>
   </head>
   <body>
     <h1>Compiling Less files</h1>
     <ul id="style">
     </ul>
     <script type="text/javascript">//<![CDATA[
-
       // The less files
       var files = [<?php foreach($files as $f) echo ("'$f', ") ?>null];
 
@@ -23,7 +24,6 @@
         style = $(style);
         var index = parseInt(style.attr('id').replace('less:', ''), 10);
         var file = getFileName(index);
-
         if (file !== false)
         {
           $('#style').append($('<li>').html(getFileName(index)));

@@ -9,7 +9,7 @@
  */
 
 /**
- * TODO
+ * Actions for the lessCss module
  *
  * @package    sfLESSPlugin
  * @subpackage actions
