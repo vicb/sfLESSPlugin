@@ -76,8 +76,6 @@ class sfWebDebugPanelLESS extends sfWebDebugPanel
     }
     $panel .= '</table>';
 
-    $panel .= '<br/><a href="/lesscss/compile">Compile</href><br/>';
-
     $this->setStatus($this->errors?sfLogger::ERR:($this->compiled?sfLogger::WARNING:sfLogger::INFO));
 
     return $panel;

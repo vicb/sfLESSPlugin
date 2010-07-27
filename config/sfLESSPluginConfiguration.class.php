@@ -42,13 +42,27 @@ class sfLESSPluginConfiguration extends sfPluginConfiguration
         ));
       }
     }
-
-    if (sfConfig::get('sf_web_debug') && sfConfig::get('app_sf_less_plugin_toolbar', true))
+    else if (sfConfig::get('app_sf_less_plugin_use_js', false))
     {
+      // Prepend routes
       $this->dispatcher->connect(
         'routing.load_configuration',
         array('sfLESSListeners', 'listenToRoutingLoadConfigurationEvent')
       );
+      
+      // Enable the lessCss module
+      sfConfig::set('sf_enabled_modules', array_merge(sfConfig::get('sf_enabled_modules', array()), array('lessCss')));
+
+      // If app_sf_less_plugin_toolbar in app.yml is set to true (by default)
+      if (sfConfig::get('sf_web_debug') && sfConfig::get('app_sf_less_plugin_toolbar', true))
+      {
+        // Add LESS toolbar to Web Debug toolbar
+        $this->dispatcher->connect('debug.web.load_panels', array(
+          'sfWebDebugPanelLESSjs',
+          'listenToLoadDebugWebPanelEvent'
+        ));
+      }
+
     }
 
     $this->dispatcher->connect(

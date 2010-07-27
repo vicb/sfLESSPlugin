@@ -21,6 +21,8 @@ class BaselessCssActions extends sfActions
 {
   public function preExecute()
   {
+    // Do not allow execution in production environment even if the module is manually enabled
+    $this->forward404Unless(sfConfig::get('sf_web_debug', true));
     $this->less = new sfLESS();
   }
 

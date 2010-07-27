@@ -12,20 +12,26 @@
     ?>
   </head>
   <body>
-    <h1>Compiling Less files</h1>
+    <h1>Less files - <span id="status">Compiling</span></h1>
     <ul id="style">
     </ul>
     <script type="text/javascript">//<![CDATA[
       // The less files
       var files = [<?php foreach($files as $f) echo ("'$f', ") ?>null];
+      var status = 'Errors detected';
 
       $.each($('style[id^=less:]', 'head'), function (i, style)
       {
-        style = $(style);
+        style = $(style);        
         var index = parseInt(style.attr('id').replace('less:', ''), 10);
         var file = getFileName(index);
         if (file !== false)
         {
+          if (index == files.length - 2)
+          {
+            status = 'Compilation Successful';
+          }
+
           $('#style').append($('<li>').html(getFileName(index)));
 
           $.post(
@@ -39,9 +45,11 @@
         }
       });
 
+      $('#status').html(status);
+
       function getFileName(index)
       {
-        if (index >= 0 && index < files.length)
+        if (index >= 0 && index < files.length - 1)
         {
           return files[index];
         }
