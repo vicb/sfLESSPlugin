@@ -23,11 +23,15 @@ class sfWebDebugPanelLESS extends sfWebDebugPanel
    */
   protected $compiled = false;
 
-
   /**
    * Some errors where triggered during the compilation
    */
   protected $errors = false;
+
+  /**
+   * Configuration
+   */
+  protected $config;
 
   /**
    * Listens to LoadDebugWebPanel event & adds this panel to the Web Debug toolbar
@@ -87,8 +91,8 @@ class sfWebDebugPanelLESS extends sfWebDebugPanel
   protected function getConfigurationContent()
   {
     $debugInfo = '<dl id="less_debug" style="display: none;">';
-    $lessHelper = new sfLESS;
-    foreach ($lessHelper->getDebugInfo() as $name => $value)
+    $this->config = sfLESS::getConfig();
+    foreach ($this->config->getDebugInfo() as $name => $value)
     {
       $debugInfo .= sprintf('<dt style="float:left; width: 100px"><strong>%s:</strong></dt>
       <dd>%s</dd>', $name, $value);
@@ -117,7 +121,7 @@ EOF
 
     // File link for preferred editor
     $fileLink = $this->formatFileLink(
-      $info['lessFile'], 1, str_replace(sfLESS::getLessPaths(), '', $info['lessFile'])
+      $info['lessFile'], 1, str_replace($this->config->getLessPaths(), '', $info['lessFile'])
     );
 
     // Checking compile & error statuses
@@ -148,7 +152,7 @@ EOF
 EOF
       ,$trStyle
       ,$fileLink
-      ,str_replace(sfLESS::getCssPaths(), '', $info['cssFile'])
+      ,str_replace($this->config->getCssPaths(), '', $info['cssFile'])
       ,($info['isCompiled'] ? $info['compTime'] * 1000 : 0)
       ,$errorId
       ,$info['error']

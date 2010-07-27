@@ -29,7 +29,7 @@ class sfLESSPluginConfiguration extends sfPluginConfiguration
       // Register listener to routing.load_configuration event
       $this->dispatcher->connect(
         'context.load_factories',
-        array('sfLESS', 'findAndCompile')
+        array('sfLESSListeners', 'findAndCompile')
       );
 
       // If app_sf_less_plugin_toolbar in app.yml is set to true (by default)
@@ -64,5 +64,10 @@ class sfLESSPluginConfiguration extends sfPluginConfiguration
       array('module' => 'lessCss', 'action' => 'saveCss'),
       array('sf_method' => array(sfRequest::POST))
     ));
+
+    $this->dispatcher->connect(
+      'less_js.compile',
+      array('sfLESSListeners', 'findAndFixContentLinks')
+    );
   }
 }
