@@ -7,7 +7,7 @@
     <?php endforeach; ?>
     <?php //todo: constant ?>
     <script type='text/javascript' src='/sfLESSPlugin/js/jquery-1.4.2.min.js'></script>
-    <script type='text/javascript' src='/sfLESSPlugin/js/less-1.0.33.js'></script>
+    <script type='text/javascript' src='<?php echo sfLESS::getConfig()->getLessJsPath(); ?>'></script>
   </head>
   <body>
     <h1>Compiling Less files</h1>
