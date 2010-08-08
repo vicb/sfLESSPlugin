@@ -73,13 +73,7 @@ class BaselessCssActions extends sfActions
       if (file_exists($less))
       {
         $css = $this->less->getCssPathOfLess($less);
-        // Checks if path exists & create if not
-        if (!is_dir(dirname($css)))
-        {
-          mkdir(dirname($css), 0777, true);
-          // PHP workaround to fix nested folders
-          chmod(dirname($css), 0777);
-        }
+        sfLESSUtils::createFolderIfNeeded($css);
         // Do not try to change the permission of an existing file which we might not own
         $setPermission = !is_file($css);
         $buffer = $request->getParameter('content');
