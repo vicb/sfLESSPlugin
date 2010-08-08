@@ -74,21 +74,7 @@ class BaselessCssActions extends sfActions
       {
         $css = $this->less->getCssPathOfLess($less);
         sfLESSUtils::createFolderIfNeeded($css);
-        // Do not try to change the permission of an existing file which we might not own
-        $setPermission = !is_file($css);
-        $buffer = $request->getParameter('content');
-        // Compress CSS if we use compression
-        if (sfLESS::getConfig()->isUseCompression())
-        {
-          $buffer = sfLESSUtils::getCompressedCss($buffer);
-        }
-        // Add compiler header to CSS & writes it to file
-        file_put_contents($css, sfLESSUtils::getCssHeader() . "\n\n" . $buffer);
-        if ($setPermission)
-        {
-          // Set permissions for fresh files only
-          chmod($css, 0666);
-        }
+        $this->less->writeCssFile($css, $request->getParameter('content'));
         $this->getResponse()->setStatusCode('200');
       }
     }
